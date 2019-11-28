@@ -16,6 +16,13 @@ export const setLoading = loading => {
   };
 };
 
+export const setData = data => {
+  return {
+    type: SET_DATA,
+    value: data
+  };
+};
+
 export const setError = error => {
   return {
     type: SET_ERROR,
@@ -23,12 +30,6 @@ export const setError = error => {
   };
 };
 
-export const setData = data => {
-  return {
-    type: SET_DATA,
-    value: data
-  };
-};
 
 export const setCurrentUser = decoded => {
     return {
@@ -42,28 +43,28 @@ export const setCurrentUser = decoded => {
  */
 export const loginUser = (user, history) => async dispatch => {
   try {
-    dispatch(setData(null));
     dispatch(setLoading({
         loading: true,
     }));
-    const data = await login(user, history);
+    const data = await login(user, history)
     const { token } = data;
-    localStorage.setItem('jwtToken', token);
-    setAuthToken(token);
-    const decoded = jwt_decode(token);
-    dispatch(setCurrentUser(decoded));
-    dispatch(
-      setLoading({
-        loading: false,
-      })
-    );
+    if(data.errors) {
+      console.log(data.errors)
+      dispatch(setError({errors:data.errors}))
+    }
+    
+    // localStorage.setItem('jwtToken', token);
+    // setAuthToken(token);
+    // const decoded = jwt_decode(token);
+    // dispatch(setCurrentUser(decoded));
+    // dispatch(setLoading({ loading: false }));
   } catch (err) {
+    console.log("error du catch", err)
     dispatch(
       setLoading({
         loading: false,
       })
     );
-    dispatch(setError(err));
     handleExceptions(err);
   }
 };

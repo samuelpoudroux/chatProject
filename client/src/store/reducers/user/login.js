@@ -5,7 +5,7 @@ import isEmpty from '../../../services/isEmpty';
 const initialState = {
   isAuthenticated: false,
   user: {},
-  error: null,
+  errors: { errors:{email:null, password:null}},
   loading: false,
 };
 
@@ -14,7 +14,7 @@ export default (state = initialState, action = {}) => {
     case SET_ERROR:
       return {
         ...state,
-        error: action.value
+        errors: action.value
       };
    
     case SET_LOADING:

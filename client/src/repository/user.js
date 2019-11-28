@@ -11,7 +11,6 @@ const URLREGISTER = "http://localhost:5000/api/user/register"
 
 
 export const login = async (user) => {
-  console.log(user)
   const req = axios.post(URLLOGIN, user);
   const { data } = await req;
   return data;

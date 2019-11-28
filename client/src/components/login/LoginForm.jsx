@@ -12,11 +12,12 @@ const mapDispatchToProps = (dispatch) => {
     };
   };
 const mapStateToProps = (state, ownProps) => {
-  const {isAuthenticated: authenticated, user: user} = state.user.login;
+  const {isAuthenticated: authenticated, user: user, errors:errors} = state.user.login;
     return {
       ...ownProps,
       authenticated,
-      user
+      user, 
+      errors
     }
   };
 
@@ -24,7 +25,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-const LoginForm = ({form, loginUser, history, authenticated, user}) => {
+const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, validateFields } = form;
     const usernameError = isFieldTouched('email') && getFieldError('email');
     const passwordError = isFieldTouched('password') && getFieldError('password');
@@ -45,18 +46,20 @@ const LoginForm = ({form, loginUser, history, authenticated, user}) => {
           }
         });
       };
-    
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
+          {console.log( 'log', errors.errors.password)}
         <Form.Item>
           {getFieldDecorator('email', {
-            rules: [{ required: true, message: 'Please input your email!' }],
+            rules: [{ required: true, message: 'Please input your email!'},
+          ],
           })(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="email"
             />,
           )}
+          { errors.errors.email ? <p> { errors.errors.email}</p> : null}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
@@ -66,19 +69,11 @@ const LoginForm = ({form, loginUser, history, authenticated, user}) => {
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
               type="password"
               placeholder="Password"
-            />,
+            />
           )}
+                    { errors.errors.password ? <p> { errors.errors.password}</p> : null}
         </Form.Item>
         <Form.Item>
-            <Row>
-            {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })}
-            </Row>
-          <Row> 
-          </Row>
-                
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>

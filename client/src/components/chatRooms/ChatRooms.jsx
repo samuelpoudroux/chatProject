@@ -16,7 +16,7 @@ return {
 
 const ChatRooms = ({user}) => {  
       return (
-        <h1>test</h1>
+        <h1>bienvenu {user.pseudo}</h1>
       );
     }
       ChatRooms.propTypes = {
