@@ -1,4 +1,4 @@
-import {SET_DATA, SET_ERROR, SET_LOADING} from '../../actions/user/getUserProfile';
+import {SET_DATA, SET_ERROR, SET_LOADING} from '../../actions/user/register';
 
 const initialState = {
   data: null,

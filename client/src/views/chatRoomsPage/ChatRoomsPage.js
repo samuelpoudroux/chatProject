@@ -1,10 +1,12 @@
 import React from 'react';
 import {Layout, Row, Col,BackTop} from 'antd';
-import LoginForm from '../../components/login/LoginForm'
 import AppBar from '../../components/AppBar';
 import Footer from '../../components/Footer';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import ChatRoom from '../../components/chatRooms/ChatRooms';
+import PropTypes from 'prop-types';
+
 
 const {Content} = Layout;
 
@@ -12,22 +14,22 @@ const mapDispatchToProps = () => {
     return {};
   };
 const mapStateToProps = (state, ownProps) => {
-    //const {data: user} = state.user.getUserProfile;
     return {
       ...ownProps,
     };
   };
 
-const LoginPage = () => {
+
+const ChatRoomsPage = ({match}) => {
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-        {console.log(process.env.REACT_APP_URL)}
-      <AppBar current="LOGIN"/>
-      <Content >
-        <Row >
+      {console.log(match.params.userId)}
+      <AppBar current="CHATROOMS"/>
+      <Content>
+        <Row>
           <BackTop/>
-          <Col span={12} offset={6} style={{minHeight: '70vh',display:'flex', alignItems:'center', justifyContent:'center'}}>
-            <LoginForm />
+          <Col span={12} offset={6}>
+            <ChatRoom />
           </Col>
         </Row>
       </Content>
@@ -36,8 +38,12 @@ const LoginPage = () => {
   );
 };
 
+ChatRoomsPage.propTypes = {
+  match: PropTypes.object
+};
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(withRouter(LoginPage));
+  )(withRouter(ChatRoomsPage));
   

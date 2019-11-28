@@ -1,17 +1,18 @@
-import Login from './views/login/LoginPage';
-import GroupChat from './views/groupChat/GroupChatPage';
+import LoginPage from './views/login/LoginPage';
+import ChatRoomsPage from './views/chatRoomsPage/ChatRoomsPage';
 import RegisterPage from './views/register/RegisterPage';
+
 
 export default [
     {
         name: 'home',
         path: '/',
-        component: Login
+        component: LoginPage
       },
     {
       name: 'login',
       path: '/login',
-      component: Login
+      component: LoginPage
     },
     {
       name: 'register',
@@ -19,9 +20,9 @@ export default [
       component: RegisterPage
     },
     {
-        name: 'groupChat',
-        path: '/groupChat',
-        component: GroupChat
+        name: 'chatRooms',
+        path: '/chatRooms/:userId',
+        component: ChatRoomsPage
       },
 
 ]

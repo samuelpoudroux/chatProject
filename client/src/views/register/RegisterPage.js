@@ -12,10 +12,10 @@ const mapDispatchToProps = () => {
     return {};
   };
 const mapStateToProps = (state, ownProps) => {
-    const {data: user} = state.user.getUserProfile;
+    //const {data: user} = state.user.getUserProfile;
     return {
       ...ownProps,
-     user
+     //user
     };
   };
 

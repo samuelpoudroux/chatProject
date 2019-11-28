@@ -3,15 +3,17 @@ import { Redirect } from "react-router-dom";
 import {Button, Divider, Form, Input, Icon,Checkbox, Col, notification, Select, Spin, Switch, Row} from 'antd';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import { registerUser } from '../../store/actions/user/register';
+import user from '../../store/reducers/user';
 
-const mapDispatchToProps = () => {
-    return {};
+const mapDispatchToProps = (dispatch) => {
+    return {
+      registerUser: (userInfo, history) => dispatch(registerUser(userInfo, history))
+    };
   };
 const mapStateToProps = (state, ownProps) => {
-    const {data: user} = state.user.getUserProfile;
     return {
       ...ownProps,
-    user
     };
   };
 
@@ -19,9 +21,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-
-
-const RegisterForm = ({form,}) => {
+const RegisterForm = ({form,registerUser, history}) => {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, validateFields } = form;
     const userNameError = isFieldTouched('userName') && getFieldError('userName');
     const emailError = isFieldTouched('email') && getFieldError('email');
@@ -32,7 +32,8 @@ const RegisterForm = ({form,}) => {
         // le scroll permet de scroller automatiquement vers un éventuel champ en erreur
         form.validateFieldsAndScroll((err, userInfo) => {
           if (!err) {
-           console.log(userInfo)
+            console.log(userInfo)
+           registerUser(userInfo, history)
           }
         });
       };
@@ -54,13 +55,13 @@ const RegisterForm = ({form,}) => {
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
         <Form.Item hasFeedback>
-          {getFieldDecorator('userName', {
-            rules: [{ required: true, message: 'Please input your username!' }],
+          {getFieldDecorator('pseudo', {
+            rules: [{ required: true, message: 'Please input your pseudo!' }],
           })(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type='userName'
-              placeholder="Username"
+              type='pseudo'
+              placeholder="pseudo"
             />,
           )}
         </Form.Item>
@@ -90,14 +91,14 @@ const RegisterForm = ({form,}) => {
           )}
         </Form.Item>
         <Form.Item hasFeedback>
-          {getFieldDecorator('passwordConfirmation', {
-            rules: [{ required: true, message: 'Please input your passwordConfirmation!' },
+          {getFieldDecorator('passwordConfirm', {
+            rules: [{ required: true, message: 'Please input your passwordConfirm!' },
             {validator: compareToFirstPassword}],
           })(
             <Input.Password
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="passwordConfirmation"
-              placeholder="PasswordConfirmation"
+              type="passwordConfirm"
+              placeholder="PasswordConfirm"
             />,
           )}
         </Form.Item>  

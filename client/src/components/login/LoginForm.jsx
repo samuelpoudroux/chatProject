@@ -1,35 +1,47 @@
 import React, {useEffect, useState} from 'react';
 import { Redirect } from "react-router-dom";
-import {Button, Divider, Form, Input, Icon,Checkbox, Col, notification, Select, Spin, Switch, Row} from 'antd';
+import {Button,  Form, Input, Icon, Row} from 'antd';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-const mapDispatchToProps = () => {
-    return {};
+import {loginUser} from '../../store/actions/user/login'
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      loginUser: (userInfo, history) => dispatch(loginUser(userInfo, history))
+    };
   };
 const mapStateToProps = (state, ownProps) => {
-    const {data: user} = state.user.getUserProfile;
+  const {isAuthenticated: authenticated, user: user} = state.user.login;
     return {
       ...ownProps,
-    user
-    };
+      authenticated,
+      user
+    }
   };
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-const LoginForm = ({form}) => {
+const LoginForm = ({form, loginUser, history, authenticated, user}) => {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, validateFields } = form;
-    const usernameError = isFieldTouched('username') && getFieldError('username');
+    const usernameError = isFieldTouched('email') && getFieldError('email');
     const passwordError = isFieldTouched('password') && getFieldError('password');
 
+    useEffect(() => {
+      if(authenticated) {
+        history.push(`/chatRooms/${user.id}`);
+      } 
+    });
+    
+    
     const handleSubmit = e => {
         e.preventDefault();
         // le scroll permet de scroller automatiquement vers un éventuel champ en erreur
         form.validateFieldsAndScroll((err, userInfo) => {
           if (!err) {
-           console.log(userInfo)
+           loginUser(userInfo, history)
           }
         });
       };
@@ -37,12 +49,12 @@ const LoginForm = ({form}) => {
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
         <Form.Item>
-          {getFieldDecorator('username', {
-            rules: [{ required: true, message: 'Please input your username!' }],
+          {getFieldDecorator('email', {
+            rules: [{ required: true, message: 'Please input your email!' }],
           })(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Username"
+              placeholder="email"
             />,
           )}
         </Form.Item>

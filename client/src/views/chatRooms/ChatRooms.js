@@ -4,7 +4,7 @@ import AppBar from '../../components/AppBar';
 import Footer from '../../components/Footer';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import GroupChat from '../../components/groupChat/GroupChat'
+import GroupChat from '../../components/chatRooms/ChatRooms'
 
 
 const {Content} = Layout;
@@ -13,21 +13,15 @@ const mapDispatchToProps = () => {
     return {};
   };
 const mapStateToProps = (state, ownProps) => {
-    const {data: network} = state.network.single;
-    const {data: grpOfLines} = state.groupOfLines.single;
-    const {data: line} = state.line.single;
     return {
       ...ownProps,
-      network,
-      grpOfLines,
-      line
     };
   };
 
-const GroupChatPage = () => {
+const ChatRooms = () => {
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-      <AppBar current="GROUPCHAT"/>
+      <AppBar current="CHATROOMS"/>
       <Content>
         <Row>
           <BackTop/>
@@ -44,5 +38,5 @@ const GroupChatPage = () => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(withRouter(GroupChatPage));
+  )(withRouter(ChatRooms));
   

@@ -1,9 +1,26 @@
 import axios from 'axios';
 
-const url = '';
+const DOMAIN = process.env.REACT_APP_URL
+const API = process.env.REACT_APP_API 
+const USER = process.env.REACT_APP_USER
+const REGISTER = process.env.REACT_APP_REGISTER
+const LOGIN = process.env.REACT_APP_LOGIN
 
-export const getUserProfile = async () => {
-  const req = axios.get(url);
+const URLLOGIN = "http://localhost:5000/api/user/login"
+const URLREGISTER = "http://localhost:5000/api/user/register"
+
+
+export const login = async (user) => {
+  console.log(user)
+  const req = axios.post(URLLOGIN, user);
   const { data } = await req;
   return data;
 };
+
+export const register = async (user, history) => {
+  const req = axios.post(URLREGISTER, user)
+  await req;
+  history.push('/login')
+}; 
+
+ 
