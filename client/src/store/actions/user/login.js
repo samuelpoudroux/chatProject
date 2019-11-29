@@ -47,18 +47,18 @@ export const loginUser = (user, history) => async dispatch => {
         loading: true,
     }));
     const data = await login(user, history)
-    const { token } = data;
     if(data.errors) {
     dispatch(setError(data.errors))
+    } else {
+      const { token } = data;
+ localStorage.setItem('jwtToken', token);
+    setAuthToken(token);
+    const decoded = jwt_decode(token);
+    dispatch(setCurrentUser(decoded));
+    dispatch(setLoading({ loading: false }));
     }
     
-    // localStorage.setItem('jwtToken', token);
-    // setAuthToken(token);
-    // const decoded = jwt_decode(token);
-    // dispatch(setCurrentUser(decoded));
-    // dispatch(setLoading({ loading: false }));
   } catch (err) {
-    console.log("error du catch", err)
     dispatch(
       setLoading({
         loading: false,

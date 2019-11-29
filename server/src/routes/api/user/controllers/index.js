@@ -11,7 +11,6 @@ const register = (req, res, next) => {
     const { errors, isValid } = validateRegisterInput(req.body);
 
     if(!isValid) {
-        console.log(errors)
         return res.json({errors});
     }
 
@@ -59,7 +58,6 @@ const register = (req, res, next) => {
 const login = (req, res, next) => {
     const { errors, isValid } = validateLoginInput(req.body, login);
     if(!isValid) {
-        console.log(req.body)
         return res.json({errors});
     }
     const email = req.body.email;

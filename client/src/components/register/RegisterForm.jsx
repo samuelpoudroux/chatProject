@@ -54,7 +54,6 @@ const RegisterForm = ({form,registerUser, history, errors}) => {
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
         <Form.Item >
-          {console.log("jsx error", errors)}
           {getFieldDecorator('pseudo', {
             rules: [{ required: true, message: 'Please input your pseudo!' }],
           })(

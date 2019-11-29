@@ -48,7 +48,6 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
       };
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
-          {console.log( 'log', errors.password)}
         <Form.Item>
           {getFieldDecorator('email', {
             rules: [{ required: true, message: 'Please input your email!'},

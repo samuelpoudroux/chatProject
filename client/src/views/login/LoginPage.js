@@ -21,7 +21,6 @@ const mapStateToProps = (state, ownProps) => {
 const LoginPage = () => {
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-        {console.log(process.env.REACT_APP_URL)}
       <AppBar current="LOGIN"/>
       <Content >
         <Row >
