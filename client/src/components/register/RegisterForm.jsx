@@ -4,7 +4,6 @@ import {Button, Divider, Form, Input, Icon,Checkbox, Col, notification, Select, 
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { registerUser } from '../../store/actions/user/register';
-import user from '../../store/reducers/user';
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -12,8 +11,10 @@ const mapDispatchToProps = (dispatch) => {
     };
   };
 const mapStateToProps = (state, ownProps) => {
+  const { errors:errors} = state.user.register;
     return {
       ...ownProps,
+      errors
     };
   };
 
@@ -21,7 +22,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-const RegisterForm = ({form,registerUser, history}) => {
+const RegisterForm = ({form,registerUser, history, errors}) => {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched, validateFields } = form;
     const userNameError = isFieldTouched('userName') && getFieldError('userName');
     const emailError = isFieldTouched('email') && getFieldError('email');
@@ -29,10 +30,8 @@ const RegisterForm = ({form,registerUser, history}) => {
     
     const handleSubmit = e => {
         e.preventDefault();
-        // le scroll permet de scroller automatiquement vers un éventuel champ en erreur
         form.validateFieldsAndScroll((err, userInfo) => {
           if (!err) {
-            console.log(userInfo)
            registerUser(userInfo, history)
           }
         });
@@ -54,7 +53,8 @@ const RegisterForm = ({form,registerUser, history}) => {
     
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
-        <Form.Item hasFeedback>
+        <Form.Item >
+          {console.log("jsx error", errors)}
           {getFieldDecorator('pseudo', {
             rules: [{ required: true, message: 'Please input your pseudo!' }],
           })(
@@ -64,8 +64,9 @@ const RegisterForm = ({form,registerUser, history}) => {
               placeholder="pseudo"
             />,
           )}
+          { errors.pseudo ? <p style={{ color: 'red' }}> { errors.pseudo}</p> : null}
         </Form.Item>
-        <Form.Item hasFeedback>
+        <Form.Item >
           {getFieldDecorator('email', {
             rules: [{ required: true, message: 'Please input your email!' }],
           })(
@@ -75,8 +76,9 @@ const RegisterForm = ({form,registerUser, history}) => {
               placeholder="Email"
             />,
           )}
+          { errors.email ? <p style={{ color: 'red' }}> { errors.email}</p> : null}
         </Form.Item>
-        <Form.Item hasFeedback>
+        <Form.Item >
           {getFieldDecorator('password', {
             rules: [{ required: true, message: 'Please input your Password!' },
             {
@@ -89,8 +91,10 @@ const RegisterForm = ({form,registerUser, history}) => {
               placeholder="Password"
             />,
           )}
+          { errors.password ? <p style={{ color: 'red' }}> { errors.password}</p> : null}
+
         </Form.Item>
-        <Form.Item hasFeedback>
+        <Form.Item >
           {getFieldDecorator('passwordConfirm', {
             rules: [{ required: true, message: 'Please input your passwordConfirm!' },
             {validator: compareToFirstPassword}],
@@ -101,6 +105,8 @@ const RegisterForm = ({form,registerUser, history}) => {
               placeholder="PasswordConfirm"
             />,
           )}
+                              { errors.passwordConfirm ? <p style={{ color: 'red' }}> { errors.passwordConfirm}</p> : null}
+
         </Form.Item>  
           <Button type="primary" htmlType="submit" className="login-form-button">
             S'inscrire

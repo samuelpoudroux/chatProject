@@ -35,7 +35,12 @@ export const registerUser = (user, history) => async dispatch => {
     dispatch(setLoading({
         loading: true,
     }));
-    await register(user, history);
+    const data = await register(user);
+    if(data.errors) {
+      dispatch(setError(data.errors))
+    } else {
+      history.push('/login')
+    }
     dispatch(setData(true));
     dispatch(
       setLoading({
@@ -48,7 +53,6 @@ export const registerUser = (user, history) => async dispatch => {
         data: false,
       })
     );
-    dispatch(setError(err));
     handleExceptions(err);
   }
 };

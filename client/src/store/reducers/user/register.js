@@ -2,7 +2,7 @@ import {SET_DATA, SET_ERROR, SET_LOADING} from '../../actions/user/register';
 
 const initialState = {
   data: null,
-  error: null,
+  errors: {},
   loading: false
 };
 
@@ -11,7 +11,7 @@ export default (state = initialState, action = {}) => {
     case SET_ERROR:
       return {
         ...state,
-        error: action.value
+        errors: action.value
       };
     case SET_DATA:
       return {

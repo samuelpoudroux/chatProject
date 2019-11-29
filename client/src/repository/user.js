@@ -16,10 +16,10 @@ export const login = async (user) => {
   return data;
 };
 
-export const register = async (user, history) => {
-  const req = axios.post(URLREGISTER, user)
-  await req;
-  history.push('/login')
+export const register = async (user) => {
+  const req = axios.post(URLREGISTER, user);
+  const { data } = await req;
+  return data;
 }; 
 
  

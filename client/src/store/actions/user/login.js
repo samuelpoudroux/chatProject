@@ -49,8 +49,7 @@ export const loginUser = (user, history) => async dispatch => {
     const data = await login(user, history)
     const { token } = data;
     if(data.errors) {
-      console.log(data.errors)
-      dispatch(setError({errors:data.errors}))
+    dispatch(setError(data.errors))
     }
     
     // localStorage.setItem('jwtToken', token);

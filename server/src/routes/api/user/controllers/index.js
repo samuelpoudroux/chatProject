@@ -11,14 +11,15 @@ const register = (req, res, next) => {
     const { errors, isValid } = validateRegisterInput(req.body);
 
     if(!isValid) {
-        return res.status(400).json(errors);
+        console.log(errors)
+        return res.json({errors});
     }
 
     User.findOne({
         email: req.body.email
     }).then(user => {
         if(user) {
-            return res.status(400).json({
+            return res.json({
                 email: 'Email already exists'
             });
         }
@@ -56,9 +57,10 @@ const register = (req, res, next) => {
 }
 
 const login = (req, res, next) => {
-    const { errors, isValid } = validateLoginInput(req.body);
+    const { errors, isValid } = validateLoginInput(req.body, login);
     if(!isValid) {
-        return res.status(400).json(errors);
+        console.log(req.body)
+        return res.json({errors});
     }
     const email = req.body.email;
     const password = req.body.password;
@@ -67,7 +69,7 @@ const login = (req, res, next) => {
         .then(user => {
             if(!user) {
                 errors.email = 'User not found'
-                return res.status(404).json(errors);
+                return res.json({errors});
             }
             bcrypt.compare(password, user.password)
                     .then(isMatch => {
@@ -92,7 +94,8 @@ const login = (req, res, next) => {
                         }
                         else {
                             errors.password = 'Incorrect Password';
-                            return res.status(400).json(errors);
+                            errors.status = 4565 ;
+                            return res.json({errors});
                         }
                     });
         });
@@ -111,3 +114,5 @@ const pass = () => {
 module.exports = {
     register, login, pass
 }
+
+

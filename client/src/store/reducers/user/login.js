@@ -5,7 +5,7 @@ import isEmpty from '../../../services/isEmpty';
 const initialState = {
   isAuthenticated: false,
   user: {},
-  errors: { errors:{email:null, password:null}},
+  errors: {},
   loading: false,
 };
 

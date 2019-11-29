@@ -48,7 +48,7 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
       };
       return (
         <Form onSubmit={handleSubmit} className="" style={{}} >
-          {console.log( 'log', errors.errors.password)}
+          {console.log( 'log', errors.password)}
         <Form.Item>
           {getFieldDecorator('email', {
             rules: [{ required: true, message: 'Please input your email!'},
@@ -59,7 +59,7 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
               placeholder="email"
             />,
           )}
-          { errors.errors.email ? <p> { errors.errors.email}</p> : null}
+          { errors.email ? <p style={{ color: 'red' }}> { errors.email}</p> : null}
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
@@ -71,7 +71,7 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
               placeholder="Password"
             />
           )}
-                    { errors.errors.password ? <p> { errors.errors.password}</p> : null}
+                    { errors.password ? <p style={{ color: 'red' }}> { errors.password}</p> : null}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" className="login-form-button">
