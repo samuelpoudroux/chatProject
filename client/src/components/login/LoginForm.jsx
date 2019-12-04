@@ -32,7 +32,7 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
 
     useEffect(() => {
       if(authenticated) {
-        history.push(`/chatRooms/${user.id}`);
+        history.push(`/joinChat/${user.id}`);
       } 
     });
     

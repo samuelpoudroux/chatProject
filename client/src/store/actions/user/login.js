@@ -9,85 +9,84 @@ export const SET_DATA = 'SET_DATA_LOGIN_USER';
 export const SET_CURRENT_USER = 'SET_CURENT_USER_LOGIN_USER';
 
 
-export const setLoading = loading => {
+export const setLoading = (loading) => {
   return {
     type: SET_LOADING,
-    value: loading
+    value: loading,
   };
 };
 
-export const setData = data => {
+export const setData = (data) => {
   return {
     type: SET_DATA,
-    value: data
+    value: data,
   };
 };
 
-export const setError = error => {
+export const setError = (error) => {
   return {
     type: SET_ERROR,
-    value: error
+    value: error,
   };
 };
 
 
-export const setCurrentUser = decoded => {
-    return {
-        type: SET_CURRENT_USER,
-        value: decoded
-    }
-}
+export const setCurrentUser = (decoded) => {
+  return {
+    type: SET_CURRENT_USER,
+    value: decoded,
+  };
+};
 
 /**
  * créé un user
  */
-export const loginUser = (user, history) => async dispatch => {
+export const loginUser = (user, history) => async (dispatch) => {
   try {
     dispatch(setLoading({
-        loading: true,
+      loading: true,
     }));
-    const data = await login(user, history)
-    if(data.errors) {
-    dispatch(setError(data.errors))
+    const data = await login(user, history);
+    if (data.errors) {
+      dispatch(setError(data.errors));
     } else {
-      const { token } = data;
- localStorage.setItem('jwtToken', token);
-    setAuthToken(token);
-    const decoded = jwt_decode(token);
-    dispatch(setCurrentUser(decoded));
-    dispatch(setLoading({ loading: false }));
+      const {token} = data;
+      localStorage.setItem('jwtToken', token);
+      setAuthToken(token);
+      const decoded = jwt_decode(token);
+      dispatch(setCurrentUser(decoded));
+      dispatch(setLoading({loading: false}));
     }
-    
   } catch (err) {
     dispatch(
-      setLoading({
-        loading: false,
-      })
+        setLoading({
+          loading: false,
+        }),
     );
     handleExceptions(err);
   }
 };
 
-export const logoutUser = (history) => async dispatch => {
+export const logoutUser = (history) => async (dispatch) => {
   try {
     dispatch(setData(null));
     dispatch(setLoading({
-        loading: true,
+      loading: true,
     }));
     localStorage.removeItem('jwtToken');
     setAuthToken(false);
     dispatch(setCurrentUser({}));
     history.push('/login');
     dispatch(
-      setLoading({
-        loading: false,
-      })
+        setLoading({
+          loading: false,
+        }),
     );
   } catch (err) {
     dispatch(
-      setLoading({
-        loading: false,
-      })
+        setLoading({
+          loading: false,
+        }),
     );
     dispatch(setError(err));
     handleExceptions(err);

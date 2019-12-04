@@ -38,7 +38,7 @@ const AppBar = ({current, authenticated, user, logoutUser, history}) => {
           </Item>
      
         <Item key="CHATROOMS">
-        {authenticated &&  <NavLink to={`/chatRooms/${user.id}`} className="nav-text">ChatRooms</NavLink> }
+        {authenticated &&  <NavLink to={`/joinChat/${user.id}`} className="nav-text">Joindre un chat</NavLink> }
         </Item>
 
         <Item  style={{float:'right'}}>

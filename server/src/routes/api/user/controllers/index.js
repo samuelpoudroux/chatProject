@@ -6,9 +6,8 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('../model/user');
 
-const register = (req, res, next) => {
-
-    const { errors, isValid } = validateRegisterInput(req.body);
+const register = async (req, res, next) => {
+    const { errors, isValid } = await validateRegisterInput(req.body);
 
     if(!isValid) {
         return res.json({errors});

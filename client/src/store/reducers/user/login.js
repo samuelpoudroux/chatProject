@@ -1,4 +1,4 @@
-import {SET_DATA, SET_ERROR, SET_LOADING, SET_CURRENT_USER} from '../../actions/user/login';
+import {SET_ERROR, SET_LOADING, SET_CURRENT_USER} from '../../actions/user/login';
 import isEmpty from '../../../services/isEmpty';
 
 
@@ -14,21 +14,21 @@ export default (state = initialState, action = {}) => {
     case SET_ERROR:
       return {
         ...state,
-        errors: action.value
+        errors: action.value,
       };
-   
+
     case SET_LOADING:
       return {
         ...state,
-        loading: action.value
+        loading: action.value,
       };
 
-      case SET_CURRENT_USER:
-        return {
-            ...state,
-            isAuthenticated: !isEmpty(action.value),
-            user: action.value
-        }
+    case SET_CURRENT_USER:
+      return {
+        ...state,
+        isAuthenticated: !isEmpty(action.value),
+        user: action.value,
+      };
     default:
       return state;
   }
