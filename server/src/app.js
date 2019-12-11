@@ -7,64 +7,102 @@ const passport = require('passport');
 const config = require('./db/db');
 var cors = require('cors');
 const apiRouter = require('./routes/api');
-const { addUser, removeUser, getUser, getUsersInRoom, allUsers } = require('./users/users');
-const { addRooms } = require('./rooms/rooms.js')
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+  allUsers
+} = require('./users/users');
+const {
+  addRooms
+} = require('./rooms/rooms.js')
 
-mongoose.connect(config.DB, { useUnifiedTopology: true, useNewUrlParser: true }).then(
-  () => { console.log('Database is connected') },
-  err => { console.log('Can not connect to the database' + err) }
+mongoose.connect(config.DB, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+}).then(
+  () => {
+    console.log('Database is connected')
+  },
+  err => {
+    console.log('Can not connect to the database' + err)
+  }
 );
 require('./passport')(passport);
 app.use(passport.initialize());
 app.use(cors())
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 app.use(require("body-parser").text());
 app.use('/api', apiRouter);
 
 io.on('connect', (socket) => {
-  // const toto =  allUsers();
-  // console.log("join user",toto)
-  // io.emit('toto', toto);
-
-  socket.on('join',({ name, room }, callback) => {
-    const { userError, user } = addUser({id: socket.id, name, room });
-    if(userError) return callback(userError);
+  socket.on('join', ({
+    name,
+    room
+  }, callback) => {
+    const {
+      userError,
+      user
+    } = addUser({
+      id: socket.id,
+      name,
+      room
+    });
+    if (userError) return callback(userError);
     socket.join(user.room);
-    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
-    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: ` l'utilisateur ${user.name} has joined!` });
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+    socket.emit('message', {
+      user: 'admin',
+      text: `${user.name}, Bienvenue sur le salon ${user.room}.`
+    });
+    socket.broadcast.to(user.room).emit('message', {
+      user: 'admin',
+      text: ` l'utilisateur ${user.name} à rejoint le chat!`
+    });
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room)
+    });
     callback();
   });
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
-    io.to(user.room).emit('message', { user: user.name, text: message });
+    io.to(user.room).emit('message', {
+      user: user.name,
+      text: message
+    });
     callback();
   });
 
   socket.on('rooms', (rooms) => {
-    const { roomsArray } = addRooms(rooms);
+    const {
+      roomsArray
+    } = addRooms(rooms);
     io.emit('rooms', roomsArray)
   })
 
   socket.on('getAllUser', (rooms) => {
     const users = allUsers();
-    console.log("rooms", users)
     io.emit('users', users);
   })
-  
-  socket.on('disconnect', ()=> {
-    console.log('disconnect')
-    console.log('socketID',socket.id)
+
+  socket.on('disconnect', () => {
     const userToRemove = removeUser(socket.id);
-    if(userToRemove) {
-      console.log('disconnect', userToRemove)
+    if (userToRemove) {
       const users = allUsers();
-      console.log('alluserafterdiconnect', users)
       io.emit('users', users);
-      io.to(userToRemove.room).emit('message', { user: 'Admin', text: `${userToRemove.name} has left.` });
-      io.to(userToRemove.room).emit('roomData', { room: userToRemove.room, users: getUsersInRoom(userToRemove.room)});
+      io.to(userToRemove.room).emit('message', {
+        user: 'Admin',
+        text: `${userToRemove.name} a quitté le chat.`
+      });
+      io.to(userToRemove.room).emit('roomData', {
+        room: userToRemove.room,
+        users: getUsersInRoom(userToRemove.room)
+      });
     };
   })
 });

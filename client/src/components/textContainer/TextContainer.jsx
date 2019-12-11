@@ -1,11 +1,11 @@
 import React from 'react';
 
 import onlineIcon from '../../images/onlineIcon.png';
-import { Col, Row} from 'antd';
+import { Col, Row, Button } from 'antd';
 
 import './TextContainer.css';
 
-const TextContainer = ({ users }) => (
+const TextContainer = ({ users, disconnect }) => (
   <Col md={12} sm={24} className="textContainer">
     <div>
       <h5>Application de chat<span role="img" aria-label="emoji">💬</span></h5>
@@ -15,16 +15,18 @@ const TextContainer = ({ users }) => (
         ? (
           <div>
             <p>Personnes présentes sur le chat:</p>
-            <div className="activeContainer">
-              <h2>
-                {users.map(({name}) => (
-                  <div key={name} className="activeItem">
-                    {name}
-                    <img alt="Online Icon" src={onlineIcon}/>
-                  </div>
-                ))}
-              </h2>
-            </div>
+            <Col className="activeContainer">
+              {users.map(({ name }) => (
+                <Row key={name} className="activeItem">
+                  <h3>{name}</h3>
+                  <img alt="Online Icon" src={onlineIcon} />
+                </Row>
+              ))}
+
+              <Button onClick={(e) => disconnect()} style={{backgroundColor:'#344E86', color:'white'}} >
+                Se deconnecter
+              </Button>
+            </Col>
           </div>
         )
         : null

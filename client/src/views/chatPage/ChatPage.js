@@ -24,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 const ChatPage = ({location}) => {
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-      <AppBar current="LOGIN"/>
+      <AppBar current="CHATROOMS"/>
       <Content >
            <Chat location= {location}/>
       </Content>

@@ -1,0 +1,11 @@
+a{
+    color:white
+}
+
+.active{
+    color: white;
+}
+
+.ant-menu-item-selected{
+    background:rgba(90, 176, 226, 0.699);
+}

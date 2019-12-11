@@ -72,12 +72,12 @@ const LoginForm = ({form, loginUser, history, authenticated, user, errors}) => {
           )}
                     { errors.password ? <p style={{ color: 'red' }}> { errors.password}</p> : null}
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
+        <Form.Item style={{display: 'flex', justifyContent:'center'}}>
+          <Button  style={{color:'#344E86'}} htmlType="submit" className="login-form-button">
             Log in
           </Button>
           <Row>
-          or <a href="/register">register now!</a>
+          or <a style={{color:'#344E86'}}href="/register">register now!</a>
           </Row>
         </Form.Item>
       </Form>

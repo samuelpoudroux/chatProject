@@ -29,7 +29,7 @@ const JoinChatPage = ({match}) => {
   // }, [])
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
-      <AppBar current="CHATROOMS"/>
+      <AppBar current="JOINCHAT"/>
       <Content className="JoinChatPageContainer">
         <Row >
           <BackTop/>

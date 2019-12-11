@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fdf0d0b8.chunk.css",
+    "main.js": "/static/js/main.900badf7.chunk.js",
+    "main.js.map": "/static/js/main.900badf7.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.4bafa49c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.4bafa49c.js.map",
+    "static/css/2.1e0af0a1.chunk.css": "/static/css/2.1e0af0a1.chunk.css",
+    "static/js/2.bf5f0c5c.chunk.js": "/static/js/2.bf5f0c5c.chunk.js",
+    "static/js/2.bf5f0c5c.chunk.js.map": "/static/js/2.bf5f0c5c.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.da80a0c45ed6b918045b4a32271b83cd.js": "/precache-manifest.da80a0c45ed6b918045b4a32271b83cd.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.1e0af0a1.chunk.css.map": "/static/css/2.1e0af0a1.chunk.css.map",
+    "static/css/main.fdf0d0b8.chunk.css.map": "/static/css/main.fdf0d0b8.chunk.css.map",
+    "static/media/JoinChatPage.css": "/static/media/network.c9514675.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4bafa49c.js",
+    "static/css/2.1e0af0a1.chunk.css",
+    "static/js/2.bf5f0c5c.chunk.js",
+    "static/css/main.fdf0d0b8.chunk.css",
+    "static/js/main.900badf7.chunk.js"
+  ]
+}

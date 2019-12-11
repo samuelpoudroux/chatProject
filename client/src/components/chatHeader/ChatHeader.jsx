@@ -9,7 +9,7 @@ const ChatHeader = ({ room }) => (
   <div className="chatHeader">
     <div className="leftInnerContainer">
       <img className="onlineIcon" src={onlineIcon} alt="online icon" />
-      <h3> Salon {room}</h3>
+      <h3 style={{color:'white'}}> Salon {room}</h3>
     </div>
     <div className="rightInnerContainer">
       <a href="/"><img src={closeIcon} alt="close icon" /></a>
