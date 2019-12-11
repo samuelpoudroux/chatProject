@@ -13,18 +13,33 @@ html, body {
   }
   
   .joinOuterContainer {
-    display: flex;
-    justify-content: center;
     text-align: center;
     height: 100vh;
+    background-size: cover;
+    background-color:hsla(0, 0%, 50%, 0.566) 
+  }
+  
+  .box {
+    /* display:flex;
+    justify-content: center;
+    align-items: center;  */
+    min-height: 50vh;
+    border : 0.5px solid white
+  }
+
+  .colCenter{
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    background-color: rgba(26, 26, 29, 0.603);
+    justify-content: center;
   }
-  
-  .joinInnerContainer {
-    width: 20%;
+
+  .cardContainer {
+    /* height: 70vh; */
+    border : 0.5px solid white;
+    cursor: pointer;
   }
-  
+ 
   .joinInput {
     border-radius: 0;
     padding: 15px 20px;
@@ -33,9 +48,9 @@ html, body {
   
   .heading {
     color: white;
-    font-size: 2.5em;
+    font-size:1.5em;
     padding-bottom: 10px;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid rgb(255, 252, 252);
   }
   
   .button {
@@ -54,7 +69,7 @@ html, body {
     margin-top: 20px;
   }
   
-  @media (min-width: 320px) and (max-width: 480px) {
+  /* @media (min-width: 320px) and (max-width: 480px) {
     .joinOuterContainer {
       height: 100%;
     }
@@ -64,7 +79,7 @@ html, body {
     }
   
   
-  }
+  } */
   
   button:focus {
     outline: 0;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Layout, Row, Col, BackTop} from 'antd';
 import AppBar from '../../components/AppBar';
 import Footer from '../../components/Footer';
@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import JoinChat from '../../components/joinChat/JoinChat';
+import './JoinChatPage.css'
 
 
 const {Content} = Layout;
@@ -21,11 +22,16 @@ const mapStateToProps = (state, ownProps) => {
 
 
 const JoinChatPage = ({match}) => {
+
+  // useEffect(() => {
+  //           window.location.reload()
+
+  // }, [])
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
       <AppBar current="CHATROOMS"/>
-      <Content>
-        <Row>
+      <Content className="JoinChatPageContainer">
+        <Row >
           <BackTop/>
           <Col>
             <JoinChat/>

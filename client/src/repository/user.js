@@ -9,7 +9,7 @@ import axios from 'axios';
 const URLLOGIN = 'http://localhost:5000/api/user/login';
 const URLREGISTER = 'http://localhost:5000/api/user/register';
 
-
+console.log('userLogin', process.env.URLLOGIN)
 export const login = async (user) => {
   const req = axios.post(URLLOGIN, user);
   const {data} = await req;

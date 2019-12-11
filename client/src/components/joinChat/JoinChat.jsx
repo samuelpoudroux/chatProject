@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Messenger from '../messenger/Messenger';
-import { Select, Icon, Divider, Input, } from 'antd';
+import { Select, Icon, Divider, Input, Button, message, Col, Row } from 'antd';
 import { Link } from "react-router-dom";
-import './JoinChat.css'
+import './JoinChat.css';
+import SocketContext from '../../socket-context.js'
+import handlerPrompt from '../../services/handlePrompt.js'
+import Card from './card/Card'
 
-
-import {setUser} from '../../store/actions/socket/socket'
 
 const { Option } = Select;
 
@@ -26,76 +26,112 @@ return {
   user,
 }};
 
-
-const ChatRooms = ({user, history}) => { 
-  const [name, setName] = useState(user.pseudo);
+const JoinChat = ({user, history, props,socket}) => { 
+const [name, setName] = useState(user.pseudo);
   const [room, setRoom] = useState('');
-  const [rooms, setRooms] = useState( ['gigot', 'cadomique']);
-  const [roomToAdd, setRoomToAdd] = useState('');
+  const [newRoom, setNewRoom] = useState('')
+  const [rooms, setRooms] = useState(["test"]);
+  const [users, setUsers] = useState([]);
+
+      useEffect(() => {
+        socket.on('rooms', (roomData) => {
+          setRooms(roomData);
+        })
+      }, [rooms]);
+
+      useEffect(() => {
+        if(newRoom !== '') {
+          socket.emit('rooms', newRoom)
+        }
+      }, [newRoom])
+
+      useEffect(() => {
+        socket.on('users', users => {
+          setUsers(users)
+        }) 
+      }, [users])
+
+      useEffect(() => {
+             socket.connect()
+        socket.emit('rooms')
+      }, [])
+
+      socket.on('users', users => {
+        setUsers(users)
+      }) 
 
   const goToRoom = () => {
     history.push(`/chat/${name}/${room}`)
   }
 
-
- const addRoom = (e) => {
-   console.log("roomToAdd =>", roomToAdd)
-     setRooms( [...rooms, roomToAdd])
+ const addNewRoom = async (e) => {
+  const result = await handlerPrompt ("room")
+     setNewRoom(result)
   };
       return (
-        <div className="joinOuterContainer">
-        <div className="joinInnerContainer">
-          <h1 className="heading">Join a room</h1>
-          <div>
-          <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="pseudo"
-              defaultValue={user.pseudo}
-              onChange={(event) => setName(event.target.value)}
-            />,
+        <Row type='flex' className="joinOuterContainer" align="middle" >
+            <Col md={{span:12}} xs={{span:24}} className="box colCenter" >
+              <Col md={{span:12}}xs={{span:24}} className="" >
+              <h5  className="heading"><span style={{color: 'white'}}>Joindre une salle de chat</span></h5>
+            
+              <div> 
               <Input
-              prefix={<Icon type="plus-circle" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="RoomToAdd"
-              onChange={(event) => setRoomToAdd(event.target.value)}            />,
-          </div>
-          <Select
-         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-        style={{ width:"100%" }}
-        placeholder="Select your room"
-        onChange = {value => setRoom(value)}
-        dropdownRender={menu => (
-          <div>
-            {menu}
-            <Divider style={{ margin: '4px 0' }} />
-            <div
-              style={{ padding: '4px 8px', cursor: 'pointer' }}
-              onMouseDown={e => e.preventDefault()}
-              onClick={e => (!roomToAdd) ? e.preventDefault() : addRoom()}
-            >
-              <Icon type="plus" /> Ajouter une room
-            </div>
-          </div>
-        )}
-      >
-        {rooms.map(room => (
-          <Option key={room}>{room}</Option>
-        ))}
-      </Select>
-          <Link onClick={e => (!name || !room) ? e.preventDefault(alert("merci de renseigner au moins les champs room et pseudo"))  : goToRoom()}>
-            <button className={'button mt-20'} type="submit">Rejoindre</button>
-          </Link>
-        </div>
-      </div>
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="pseudo"
+                  defaultValue={user.pseudo}
+                  onChange={(event) => setName(event.target.value)}
+                />,
+              </div>
+              <Select
+            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            style={{ width:"100%" }}
+            placeholder="Select ton salon"
+            onChange = {value => setRoom(value)}
+            dropdownRender={menu => (
+              <div>
+                {menu}
+                <Divider style={{ margin: '4px 0' }} />
+                <div
+                  style={{ padding: '4px 8px', cursor: 'pointer' }}
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={e => addNewRoom(e)}
+                >
+                  <Icon type="plus" /> Ajouter un salon
+                </div>
+              </div>
+            )}
+          >
+            {rooms.map(room => (
+              <Option key={room}>{room}</Option>
+            ))}
+          </Select>
+                <Button onClick={e => ( !name || !room) ? e.preventDefault()  : goToRoom()} type='dashed' className={'mt-2'}><span style={{color: '#0089c8'}}>Rejoindre</span></Button>
+              </Col>
+            </Col>
+            <Col md={{span:12}} xs={{span:24}} className='box'>
+        <h5 style={{color: 'white'}} >Utilisateurs connectés</h5 >
+          <Row className='' type='flex'  align="middle" justify={users.length <3 ? 'start' : "center"} >
+          {users.map(user => {
+            return <Card key={user} currentUser={name}history={history} user={user} bordered={true}/>
+          })}
+          </Row>
+          </Col>
+        </Row>
      );
+     alert("merci de renseigner au moins les champs room et pseudo")
     }
-      ChatRooms.propTypes = {
+      JoinChat.propTypes = {
         userData: PropTypes.object,
         match: PropTypes.object,
       };
 
-  
+      const joinChatWithSocket = props  => {
+        return <SocketContext.Consumer>
+        {socket => <JoinChat {...props} socket={socket} />}
+        </SocketContext.Consumer>
+      }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(withRouter(ChatRooms));
+  )(withRouter(joinChatWithSocket));

@@ -7,6 +7,7 @@ const initialState = {
   user: {},
   errors: {},
   loading: false,
+  refresh: false
 };
 
 export default (state = initialState, action = {}) => {

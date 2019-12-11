@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import TextContainer from '../textContainer/TextContainer';
@@ -7,9 +6,9 @@ import Messages from '../messages/Messages';
 import Input from '../input/Input';
 import { Col, Row} from 'antd';
 import ChatHeader from "../chatHeader/ChatHeader";
-import './Chat.css'
+import './Chat.css';
+import SocketContext from '../../socket-context'
 
-let socket;
 const mapDispatchToProps = () => {
   return {};
 };
@@ -21,41 +20,39 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const Chat = ({ match, userData}) => {
+const Chat = ({ match, userData, props, socket, history}) => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = 'http://127.0.0.1:5000';
 
-  useEffect(() => {
-const {name, room} = match.params    
-socket = io(ENDPOINT);
-
+  useEffect( () => {
+    const {name, room} = match.params    
     setRoom(room);
-    setName(name)
-
-    socket.emit('join', { name, room }, (error) => {
-      if(error) {
-        alert(error);
-      }
-    });
-  }, [ENDPOINT, match.params]);
+    setName(name);
+      socket.emit('join', { name, room }, (error) => {
+        if(error) {
+   alert(error);
+ };
+ socket.emit('getAllUser')
+});
+    return () => {
+      socket.disconnect()
+      socket.off()
+    }
+  }, [match.params]);
 
   useEffect(() => {
     socket.on('message', (message) => {
+      console.log('message')
       setMessages([...messages, message ]);
     });
 
     socket.on('roomData', ({ users }) => {
+      console.log('roomdata')
       setUsers(users);
     })
-
-    return () => {
-      socket.emit('disconnect');
-      socket.off();
-    }
   }, [messages])
 
   const sendMessage = (event) => {
@@ -64,6 +61,11 @@ socket = io(ENDPOINT);
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   }
+const leaveRoom = (e)=> {
+  socket.emit('disconnect');
+  socket.off();
+  history.push(`/joinChat/${userData.id}`)
+}
 
   return (
     <Row className="outerContainer">
@@ -71,16 +73,23 @@ socket = io(ENDPOINT);
           <ChatHeader room={room} />
           <Messages messages={messages} name={name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          <button onClick={(e) => leaveRoom()}>diconnect</button>
       </Col>
       <TextContainer users={users}/>
     </Row>
   );
 }
 
+const ChatWithSocket = props => {
+  return <SocketContext.Consumer>
+  {socket => <Chat {...props} socket={socket} />}
+  </SocketContext.Consumer>
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(Chat));
+)(withRouter(ChatWithSocket));
 
 
 

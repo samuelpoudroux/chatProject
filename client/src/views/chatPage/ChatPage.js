@@ -21,15 +21,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const ChatPage = ({match}) => {
+const ChatPage = ({location}) => {
   return (
     <Layout className="layout" style={{minHeight: '100vh'}}>
       <AppBar current="LOGIN"/>
       <Content >
-        <Row >
-          <BackTop/>
-           <Chat match= {match}/>
-        </Row>
+           <Chat location= {location}/>
       </Content>
       <Footer/>
     </Layout>
