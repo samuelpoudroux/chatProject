@@ -12,7 +12,8 @@ const {
   removeUser,
   getUser,
   getUsersInRoom,
-  allUsers
+  allUsers,
+  userByName
 } = require('./users/users');
 const {
   addRooms
@@ -88,6 +89,11 @@ io.on('connect', (socket) => {
   socket.on('getAllUser', (rooms) => {
     const users = allUsers();
     io.emit('users', users);
+  })
+
+  socket.on('userByName', (name) => {
+    const users = userByName(name);
+    io.emit('userByName', users);
   })
 
   socket.on('disconnect', () => {

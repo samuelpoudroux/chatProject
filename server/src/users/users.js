@@ -37,5 +37,11 @@ const getUser =  (id) =>  {
 }
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+
+const userByName = (name) =>  {
+  const newUser = users.slice()
+  return newUser.filter((user) => user.name.startsWith(name))
+}
+
 // allUsers
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, allUsers };
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, allUsers, userByName };

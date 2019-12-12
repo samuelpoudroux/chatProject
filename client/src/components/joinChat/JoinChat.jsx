@@ -33,6 +33,7 @@ const JoinChat = ({ user, history, props, socket }) => {
   const [newRoom, setNewRoom] = useState('')
   const [rooms, setRooms] = useState(["test"]);
   const [users, setUsers] = useState([]);
+  const [usersFilter, setUsersFilter] = useState([]);
 
   useEffect(() => {
     socket.on('rooms', (roomData) => {
@@ -63,6 +64,20 @@ const JoinChat = ({ user, history, props, socket }) => {
 
   const goToRoom = () => {
     history.push(`/chat/${name}/${room}`)
+  }
+
+  useEffect(() => {
+    socket.on('userByName', users => {
+      setUsers(users)
+    })
+  }, [usersFilter]);
+
+  const getUserByName = (e) => {
+    if(e.target.value !== null && e.target.value !== '') {
+      socket.emit('userByName', e.target.value )
+    } else {
+      socket.emit('getAllUser')
+    }
   }
 
   const addNewRoom = async (e) => {
@@ -110,8 +125,13 @@ const JoinChat = ({ user, history, props, socket }) => {
         </Col>
       </Col>
       <Col md={{ span: 12 }} xs={{ span: 24 }} className='box'>
-        <h5 style={{ color: 'white' }} >Utilisateurs connectés</h5 >
-        <Row className='' type='flex' align="middle" justify={users.length < 3 ? 'start' : "center"} >
+        <Row style={{marginTop:'10px'}} type='flex' align="space-around">
+          <h5 style={{ color: 'white' }} >Utilisateurs connectés</h5 >
+          <Input style={{width:'auto'}}placeholder='rechercher un utilisateur'
+          prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} 
+          onChange={ (e) => getUserByName(e)}/>
+        </Row>
+        <Row style={{marginTop:'10px'}} type='flex' align="middle" justify={users.length < 3 ? 'start' : "center"} >
           {users.map(user => {
             return <Card key={user} currentUser={name} history={history} user={user} bordered={true} />
           })}
