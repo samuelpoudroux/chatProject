@@ -114,14 +114,14 @@ const JoinChat = ({ user, history, props, socket }) => {
 
         <Col style={{ color: '#344E86', marginTop: "5%" }} className="colCenter" >
           <Input
-            prefix={<Icon type="user" style={{ color: '#344E86' }} />}
+            suffix={<Icon type="user" style={{ color: '#344E86' }} />}
             placeholder="pseudo"
             defaultValue={user.pseudo}
             onChange={(event) => setName(event.target.value)}
             style={{ width: '250px' }}
           />,
           <Select
-            prefix={<Icon type="user" style={{ color: '#344E86' }} />}
+            suffixIcon={<Icon type="wechat" style={{ color: '#344E86' }} />}
             showSearch
             style={{ width: "250px" }}
             placeholder="Choisis ton salon"
