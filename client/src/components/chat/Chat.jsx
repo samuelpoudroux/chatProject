@@ -38,6 +38,7 @@ const Chat = ({ match, userData, props, socket, history }) => {
       socket.emit('getAllUser')
     });
     return () => {
+      socket.emit('getAllUser')
       socket.disconnect()
       socket.off()
     }

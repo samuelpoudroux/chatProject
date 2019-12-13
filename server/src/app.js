@@ -13,10 +13,11 @@ const {
   getUser,
   getUsersInRoom,
   allUsers,
-  userByName
+  userByName,
+  checkUserAvaibility
 } = require('./users/users');
 const {
-  addRooms
+  addRooms,
 } = require('./rooms/rooms.js')
 
 mongoose.connect(config.DB, {
@@ -41,6 +42,28 @@ app.use(require("body-parser").text());
 app.use('/api', apiRouter);
 
 io.on('connect', (socket) => {
+
+  socket.on('beforeJoin', ({
+    name,
+    room
+  }, callback) => {
+    const {
+      userError, 
+      isAvailable
+    } = checkUserAvaibility({
+      name,
+      room
+    });
+
+    if (userError)  {
+      return callback(userError)
+    }
+
+    if(isAvailable) {
+      return callback(isAvailable)
+    }
+  })
+
   socket.on('join', ({
     name,
     room
@@ -85,6 +108,7 @@ io.on('connect', (socket) => {
     } = addRooms(rooms);
     io.emit('rooms', roomsArray)
   })
+
 
   socket.on('getAllUser', (rooms) => {
     const users = allUsers();

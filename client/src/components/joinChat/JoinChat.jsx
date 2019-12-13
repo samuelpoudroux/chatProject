@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Select, Icon, Divider, Input, Button, message, Col, Row } from 'antd';
+import PropTypes, { string } from 'prop-types';
+import { Select, Icon, Divider, Input, Button, message, Col, Row, Alert} from 'antd';
 import { Link } from "react-router-dom";
 import './JoinChat.css';
 import SocketContext from '../../socket-context.js'
@@ -20,7 +20,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 const mapStateToProps = (state, ownProps) => {
   const { user: user } = state.user.login;
-  // const { userConnected: userConnected} = state.socket.socket;
   return {
     ...ownProps,
     user,
@@ -32,8 +31,11 @@ const JoinChat = ({ user, history, props, socket }) => {
   const [room, setRoom] = useState('');
   const [newRoom, setNewRoom] = useState('')
   const [rooms, setRooms] = useState(["test"]);
+  const [alert, setAlert] = useState(false);
   const [users, setUsers] = useState([]);
   const [usersFilter, setUsersFilter] = useState([]);
+  const [error, setError] = useState();
+
 
   useEffect(() => {
     socket.on('rooms', (roomData) => {
@@ -62,9 +64,19 @@ const JoinChat = ({ user, history, props, socket }) => {
     setUsers(users)
   })
 
-  const goToRoom = () => {
-    history.push(`/chat/${name}/${room}`)
+  const goToRoom = (e) => {
+    e.preventDefault()
+    socket.emit('beforeJoin', { name, room }, (callback) => {
+      if (callback === true) {
+        history.push(`/chat/${name}/${room}`)
+      }   else {
+        setError(callback);
+      }
+  });
   }
+
+  useEffect(() => {
+  }, [usersFilter]);
 
   useEffect(() => {
     socket.on('userByName', users => {
@@ -72,36 +84,47 @@ const JoinChat = ({ user, history, props, socket }) => {
     })
   }, [usersFilter]);
 
+  // useEffect(() => {
+  //   socket.on('beforeJoin', errors => {
+  //     console.log(errors)
+  //     setErrors(errors)
+  //   })
+  // }, [errors]);
+
   const getUserByName = (e) => {
-    if(e.target.value !== null && e.target.value !== '') {
-      socket.emit('userByName', e.target.value )
+    if (e.target.value !== null && e.target.value !== '') {
+      socket.emit('userByName', e.target.value.trim())
     } else {
       socket.emit('getAllUser')
     }
   }
 
   const addNewRoom = async (e) => {
-    const result = await handlerPrompt("room")
+    const result = await handlerPrompt("salon")
     setNewRoom(result)
   };
   return (
     <Row type='flex' className="joinOuterContainer" align="middle" >
-      <Col md={{ span: 12 }} xs={{ span: 24 }} className="box colCenter" >
-        <Col md={{ span: 12 }} xs={{ span: 24 }} className="" >
-          <h5 className="heading"><span style={{ color: 'white' }}>Joindre une salle de chat</span></h5>
+      <Col md={{ span: 12 }} xs={{ span: 24 }} className="box" >
 
-          <div>
-            <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="pseudo"
-              defaultValue={user.pseudo}
-              onChange={(event) => setName(event.target.value)}
-            />,
-              </div>
+      {error && <Alert message={error} type="info" closeText="Close Now" />}
+        <Row style={{ marginTop: '10px' }} type='flex' align="space-around">
+          <h5 className="heading"><span style={{ color: 'white' }}>Joindre une salle de chat</span></h5>
+        </Row>
+
+        <Col style={{ color: '#344E86', marginTop: "5%" }} className="colCenter" >
+          <Input
+            prefix={<Icon type="user" style={{ color: '#344E86' }} />}
+            placeholder="pseudo"
+            defaultValue={user.pseudo}
+            onChange={(event) => setName(event.target.value)}
+            style={{ width: '250px' }}
+          />,
           <Select
-            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            style={{ width: "100%" }}
-            placeholder="Select ton salon"
+            prefix={<Icon type="user" style={{ color: '#344E86' }} />}
+            showSearch
+            style={{ width: "250px" }}
+            placeholder="Choisis ton salon"
             onChange={value => setRoom(value)}
             dropdownRender={menu => (
               <div>
@@ -121,17 +144,18 @@ const JoinChat = ({ user, history, props, socket }) => {
               <Option key={room}>{room}</Option>
             ))}
           </Select>
-          <Button onClick={e => (!name || !room) ? e.preventDefault() : goToRoom()} type='dashed' className={'mt-2'}><span style={{ color: '#0089c8' }}>Rejoindre</span></Button>
+          <Button onClick={e => goToRoom(e)} type='dashed' className={'mt-2'}><span style={{ color: '#0089c8' }}>Rejoindre</span></Button>
         </Col>
       </Col>
+
       <Col md={{ span: 12 }} xs={{ span: 24 }} className='box'>
-        <Row style={{marginTop:'10px'}} type='flex' align="space-around">
-          <h5 style={{ color: 'white' }} >Utilisateurs connectés</h5 >
-          <Input style={{width:'auto'}}placeholder='rechercher un utilisateur'
-          prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} 
-          onChange={ (e) => getUserByName(e)}/>
+        <Row style={{ marginTop: '10px' }} type='flex' align="space-around">
+          <h5 className='heading' style={{ color: 'white' }} >Utilisateurs connectés</h5 >
+          <Input style={{ width: 'auto' }} placeholder='rechercher un utilisateur'
+            prefix={<Icon type="user" style={{ color: '#344E86' }} />}
+            onChange={(e) => getUserByName(e)} />
         </Row>
-        <Row style={{marginTop:'10px'}} type='flex' align="middle" justify={users.length < 3 ? 'start' : "center"} >
+        <Row style={{ marginTop: '10px' }} type='flex' align="middle" justify={users.length < 3 ? 'start' : "center"} >
           {users.map(user => {
             return <Card key={user} currentUser={name} history={history} user={user} bordered={true} />
           })}
@@ -139,7 +163,6 @@ const JoinChat = ({ user, history, props, socket }) => {
       </Col>
     </Row>
   );
-  alert("merci de renseigner au moins les champs room et pseudo")
 }
 JoinChat.propTypes = {
   userData: PropTypes.object,

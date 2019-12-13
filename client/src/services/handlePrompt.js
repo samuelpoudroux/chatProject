@@ -2,8 +2,8 @@ import prompt from "antd-prompt";
 
 const handlerPrompt  = async (data) => {
       const result = await prompt({
-        title: `Please enter ${data}`,
-        placeholder: `Your ${data}`,
+        title: `Nouveau ${data}`,
+        placeholder: `Merci de renseigner le nouveau ${data} que vous souhaitez rajouter`,
         rules: [
           // check this link for more help: https://ant.design/components/form/#Validation-Rules
           {
