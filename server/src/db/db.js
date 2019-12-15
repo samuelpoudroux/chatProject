@@ -1,3 +1,3 @@
 module.exports = {
-    DB: 'mongodb://localhost:27017/chat'
+    DB: 'mongodb://https://samchatapp.herokuapp.com//chat'
 }
