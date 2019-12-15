@@ -5,7 +5,8 @@
   "main": "index.js",
   "stripeSecretKey": "sk_test_qWJd0aJoypgjJnAUlveeIrG100togYGVd3",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "samuel",
